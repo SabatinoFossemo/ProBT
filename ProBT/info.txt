@@ -1,0 +1,40 @@
+Backtest:
+Strategy;
+Data;
+for bar in Data:
+    Strategy()
+
+BackTest with MoneyManagement:
+Strategy;
+Data;
+StrategyMoneyManagement;
+for bar in Data:
+    StrategyMoneyManagement()
+    Strategy()
+
+
+Portfolio of strategy on same symbol:
+for bar in bars:
+    EquityMoneymanagement()
+    for Strategy in Strategies:
+        StrategyMoneyManagement()
+        Strategy()
+
+Portfolio Strategies different Data
+Strategy1 - Data1
+Strategy2 - Data2
+...       - ...
+StrategyN - DataN
+
+for day in Days:
+    EquityMoneymanagement()
+    for symbol in Symbols
+        SymbolMoneymanagement()
+        for Strategy in Strategies:
+            StrategyMoneyManagement()
+            Strategy()
+
+
+
+
+

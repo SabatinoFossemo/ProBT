@@ -1,0 +1,12 @@
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/bin/Debug/net6.0/ProBT.deps.json
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/bin/Debug/net6.0/ProBT.dll
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/bin/Debug/net6.0/ProBT.pdb
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.csproj.AssemblyReference.cache
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.GeneratedMSBuildEditorConfig.editorconfig
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.AssemblyInfoInputs.cache
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.AssemblyInfo.cs
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.csproj.CoreCompileInputs.cache
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.dll
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/refint/ProBT.dll
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ProBT.pdb
+/Users/sabatinofossemo/VSC_Project/CSHARP/ClassLibraryProjects/ProBT/obj/Debug/net6.0/ref/ProBT.dll
