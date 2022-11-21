@@ -47,20 +47,20 @@ namespace ProBT
             this.ticksize = ticksize;
         }
 
-        // public Quote(Quote in_quote)
-        // {
-        //     date = new List<DateTime>();
-        //     open = new List<double>();
-        //     high = new List<double>();
-        //     low = new List<double>();
-        //     close = new List<double>();
+        public Quote(Quote in_quote)
+        {
+            date = new List<DateTime>();
+            open = new List<double>();
+            high = new List<double>();
+            low = new List<double>();
+            close = new List<double>();
 
-        //     this.symbol = in_quote.Symbol;
-        //     this.category = in_quote.Category;
-        //     this.sector = in_quote.Sector;
-        //     this.bigpointvalue = in_quote.BigPointValue;
-        //     this.ticksize = in_quote.TickSize;
-        // }
+            this.symbol = in_quote.Symbol;
+            this.category = in_quote.Category;
+            this.sector = in_quote.Sector;
+            this.bigpointvalue = in_quote.BigPointValue;
+            this.ticksize = in_quote.TickSize;
+        }
 
         public Quote(Quote in_quote, List<DateTime> D, List<double> O, List<double> H, List<double> L, List<double> C)
         {
