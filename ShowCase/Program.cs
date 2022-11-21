@@ -14,13 +14,13 @@ namespace TestCL
 
             MyStrategy mystrategy = new MyStrategy();
 
-            // ProBT.Backtest myBT = new ProBT.Backtest();
-            // myBT.MaxBarsBack = 200;
+            ProBT.Backtest myBT = new ProBT.Backtest();
+            myBT.MaxBarsBack = 200;
 
-            // myBT.Run(mydata, mystrategy);
+            myBT.Run(mydata, mystrategy);
             
-            ProBT.Permutation myRand = new ProBT.Permutation();
-            myRand.Run(mydata, mystrategy, 10);
+            // ProBT.Permutation myRand = new ProBT.Permutation();
+            // myRand.Run(mydata, mystrategy, 10);
             
         }
     }
