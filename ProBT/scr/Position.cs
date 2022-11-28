@@ -2,16 +2,16 @@ namespace ProBT
 {
     public class Position
     {
-        protected int id;
-        protected string name;
-        protected ORDER_TYPE type;
-        protected DateTime entry_date;
-        protected double entry_price;
-        double sl = 0;
-        double tp = 0;
-        protected double mae = 0;
-        protected double mfe = 0;
-        protected double profit = 0;
+        protected internal int id;
+        protected internal string name;
+        protected internal ORDER_TYPE type;
+        protected internal DateTime entry_date;
+        protected internal double entry_price;
+        protected internal double sl = 0;
+        protected internal double tp = 0;
+        protected internal decimal mae = 0;
+        protected internal decimal mfe = 0;
+        protected internal decimal profit = 0;
 
         public Position(int id, Order order, DateTime entry_date, double entry_price)
         {
@@ -49,16 +49,16 @@ namespace ProBT
 
 
 
-        public int ID {get => this.id;}
-        public string Name {get => this.name;}
-        public ORDER_TYPE Type {get => this.type;}
-        public DateTime EntryDate {get => this.entry_date;}
-        public double EntryPrice {get => this.entry_price;}
-        public double StopLoss {get => this.sl;}
-        public double TakeProfit {get => this.tp;}
-        public double MAE {get => this.mae;}
-        public double MFE {get => this.mfe;}
-        public double Profit {get => this.profit;}
+        internal int ID {get => this.id;}
+        internal string Name {get => this.name;}
+        internal ORDER_TYPE Type {get => this.type;}
+        internal DateTime EntryDate {get => this.entry_date;}
+        internal double EntryPrice {get => this.entry_price;}
+        internal double StopLoss {get => this.sl;}
+        internal double TakeProfit {get => this.tp;}
+        internal decimal MAE {get => this.mae;}
+        internal decimal MFE {get => this.mfe;}
+        internal decimal Profit {get => this.profit;}
 
         private double StopLossCalcPrice(double value)
         {
@@ -96,27 +96,17 @@ namespace ProBT
             if(this.Type == ORDER_TYPE.NULL)
                 return "POS: FLAT";
             else
-                return "POS: " + 
-                id + " - " + 
-                name + " - " + 
-                type + " - " +
-                entry_date + " - " + 
-                entry_price.ToString("F2") + " - " + 
-                sl.ToString("F2") + " - " + 
-                tp.ToString("F2") + " - " + 
-                mae.ToString("F2") + " - " + 
-                mfe.ToString("F2") + " - " + 
-                profit.ToString("F2");
+                return $"POS: {id}  - {name} - {type} - {entry_date} - {entry_price.ToString("F2")} - {sl.ToString("F2")} - {tp.ToString("F2")} - {mae.ToString("F2")} + - {mfe.ToString("F2")} - {profit.ToString("F2")}";
         }
 
-        public Position Update(double h, double l, double c, double bpv)
+        internal Position Update(double h, double l, double c, decimal bpv)
         {            
-            double profit = (c - this.entry_price) * bpv;
-            double h_ep = (h - this.entry_price) * bpv;
-            double l_ep = (l - this.entry_price) * bpv;
+            decimal profit = (decimal)(c - this.entry_price) * bpv;
+            decimal h_ep = (decimal)(h - this.entry_price) * bpv;
+            decimal l_ep = (decimal)(l - this.entry_price) * bpv;
 
-            double mfe = h_ep;
-            double mae = l_ep;
+            decimal mfe = h_ep;
+            decimal mae = l_ep;
 
             if(this.type == ORDER_TYPE.SELLSHORT)
             {
@@ -125,19 +115,19 @@ namespace ProBT
                 mae = -h_ep;
             }
             this.profit = profit;
-            this.mfe = Math.Max(mfe, Convert.ToDouble(this.mfe));
-            this.mae = Math.Min(mae, Convert.ToDouble(this.mae));
+            this.mfe = (decimal)Math.Max(mfe, Convert.ToDecimal(this.mfe));
+            this.mae = (decimal)Math.Min(mae, Convert.ToDecimal(this.mae));
 
             return this;
         }
 
-        public Trade Close(DateTime exit_date, double exit_price, string exit_reason)
+        internal Trade Close(DateTime exit_date, double exit_price, string exit_reason)
         {
             Trade trade = new Trade(this, exit_date, exit_price, exit_reason);
             return trade;
         }
 
-        public Position Reset()
+        internal Position Reset()
         {
             return new Position();
         }

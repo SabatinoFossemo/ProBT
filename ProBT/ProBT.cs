@@ -3,21 +3,21 @@ namespace ProBT
 {
     public class Backtest
     {   
-        int maxbarsback = 200;
-        double init_balance = 100000;
+        int maxbarsback = 5;
+        decimal init_balance = 100000;
 
         //property
         public int MaxBarsBack{get => this.maxbarsback; set=>this.maxbarsback = value;}
-        public double InitialBalance{get => this.init_balance; set=>this.init_balance = value;}
+        public decimal InitialBalance{get => this.init_balance; set=>this.init_balance = value;}
 
 
         // Start BackTest
         public PerformanceReport Run(Quote _quote, Strategy _strategy)
-        {
-            Console.WriteLine("Run Backtest...");
-            
+        {            
             Quote quote = _quote;
-            Strategy strategy = _strategy;
+
+            Strategy strategy =  _strategy.Clean();
+
             Equity equity = new Equity(this.init_balance);
 
             strategy.send_attribute(quote.BigPointValue, quote.TickSize);
@@ -30,11 +30,11 @@ namespace ProBT
                 List<double> _hi = quote.High.GetRange(bar-maxbarsback, maxbarsback);
                 List<double> _lo = quote.Low.GetRange(bar-maxbarsback, maxbarsback);
                 List<double> _cl = quote.Close.GetRange(bar-maxbarsback, maxbarsback);
-
                 // # ReIndex as bars ago.
                 // # example:
                 // # bar[0] is the current bar.
                 // # bar[5] is 5 bars ago.
+
                 _dt.Reverse();
                 _op.Reverse();
                 _hi.Reverse();
@@ -66,9 +66,12 @@ namespace ProBT
             strategy.Deinitialize();
 
             // End BackTest
-            Console.WriteLine(strategy.Trades);
+            // Console.WriteLine(strategy.Trades);
             PerformanceReport performance_report = new PerformanceReport(strategy.Trades, equity);
-            Console.WriteLine(performance_report.Summary);
+            // Console.WriteLine(strategy.Trades);
+            Console.WriteLine($"{performance_report.Summary.StratSum["NumTrades"]}");
+            Console.WriteLine($"{performance_report.Summary.StratSum["NetProfit"]}");
+            Console.ReadLine();
 
             return performance_report;
         }
@@ -84,15 +87,19 @@ namespace ProBT
         {
             // Original BackTest
             ProBT.Backtest orig_bt = new ProBT.Backtest();
-            backtestList.Add(orig_bt.Run(_quote, _strategy));
+
+            PerformanceReport orig_perf_rep = orig_bt.Run(_quote, _strategy);
+
+            backtestList.Add(orig_perf_rep);
             
             // Randomization
             for (int i = 0; i < iter_number; i++)
             {
                 ProBT.Backtest bt = new ProBT.Backtest();
-                Quote fake_q = new Quote(_quote);
+                Quote fake_q = perform_randomization(_quote);
+                PerformanceReport perf_rep = bt.Run(fake_q, _strategy);
 
-                backtestList.Add(bt.Run(fake_q, _strategy));
+                backtestList.Add(perf_rep);
             }
         }
 
@@ -105,11 +112,13 @@ namespace ProBT
             List<double> C = new List<double>();
 
             int[] idx = new int[_q.Date.Count()];
+        
             for (int i = 0; i < _q.Date.Count(); i++)
                 idx[i] = i;
 
             D = _q.Date;
 
+            // calculate first bar
             double value = 0;
             O.Add(value);
 
@@ -122,6 +131,7 @@ namespace ProBT
             value = (_q.Close[0] - _q.Low[0]) / _q.Low[0];
             C.Add(value);
 
+            // calculate all other bars
             for (int i = 1; i < _q.Date.Count(); i++)
             {
                 // close to open
@@ -141,15 +151,37 @@ namespace ProBT
                 C.Add(value);
             }
 
+
+            // shuffle index
             var rng = new Random();
             RandomExtensions.Shuffle(rng, idx);
-            foreach(var x in idx)
-            Console.WriteLine(x);
-            Console.ReadLine();
+
+            // randomized list
+            List<double> O_r = new List<double>();
+            List<double> H_r = new List<double>();
+            List<double> L_r = new List<double>();
+            List<double> C_r = new List<double>();
+
+            // first bar
+            bool first_bar = true;
+
+            // all other bars
+            for(int i = 0; i < _q.Date.Count(); i++)
+            {
+                if(first_bar){
+                    O_r.Add(_q.Open[0]);
+                    first_bar = false;
+                }
+                else{
+                    O_r.Add(C_r[i-1] + (C_r[i-1] * O[idx[i]]));
+                }
+                H_r.Add(O_r[i] + (O_r[i] * H[idx[i]]));
+                L_r.Add(H_r[i] + (H_r[i] * L[idx[i]]));
+                C_r.Add(L_r[i] + (L_r[i] * C[idx[i]]));
+            }
 
 
-
-            Quote result = new Quote(_q, D, O, H, L, C);
+            Quote result = new Quote(_q, D, O_r, H_r, L_r, C_r);
 
             return result;
         }

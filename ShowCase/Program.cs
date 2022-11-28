@@ -11,16 +11,17 @@ namespace TestCL
 
             Quote mydata = new Quote(file_path, "CL", "Futures", "Energy", 1000, 0.01);
             mydata.PrintInfo();
+            // mydata.Statistics();
 
             MyStrategy mystrategy = new MyStrategy();
 
-            ProBT.Backtest myBT = new ProBT.Backtest();
-            myBT.MaxBarsBack = 200;
+            // ProBT.Backtest myBT = new ProBT.Backtest();
+            // myBT.MaxBarsBack = 200;
 
-            myBT.Run(mydata, mystrategy);
+            // myBT.Run(mydata, mystrategy);
             
-            // ProBT.Permutation myRand = new ProBT.Permutation();
-            // myRand.Run(mydata, mystrategy, 10);
+            ProBT.Permutation myRand = new ProBT.Permutation();
+            myRand.Run(mydata, mystrategy, 10);
             
         }
     }
@@ -29,26 +30,20 @@ namespace TestCL
     {
         public override void Iniialize()
         {
-            Console.WriteLine("Inizialize...");
         }
+
         public override void OnBarUpdate()
         {
-            // Console.Write("Strategy: ");
-            // Console.WriteLine(D[0]);
 
             if(C[0] > C[1])
-                SellShort("close", "CL_DC");
+                Buy(High[0], "CL_DC");
 
             if(C[0] < C[1])
-                Buy("close", "CL_DC");
-            SetTakeProfitDollar(2000);
+                SellShort(Low[0], "CL_DC");
         }
+
         public override void Deinitialize()
         {
-            Console.WriteLine("Deinitialize...");
-
-            // Console.WriteLine("DeInitialize...");
-            // Console.WriteLine(this.Trades.ToString());
         }
 
     }

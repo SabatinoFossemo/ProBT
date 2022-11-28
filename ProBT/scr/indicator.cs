@@ -1,7 +1,6 @@
-namespace ProBT.scr
+namespace ProBT
 {
-    public class indicator
+    public static class Indicator
     {
-        
     }
 }

@@ -4,11 +4,11 @@ namespace ProBT
 {
     public class Equity
     {
-        double initial_balance;
+        decimal initial_balance;
         List<Point> point;
 
 
-        public Equity(double initial_balance)
+        public Equity(decimal initial_balance)
         {
             this.initial_balance = initial_balance;
             this.point = new List<Point>();
@@ -20,10 +20,10 @@ namespace ProBT
             this.point.Add(point);
         }
 
-        public List<double> Peak
+        public List<decimal> Peak
         {
             get{
-                List<double> result = new List<double>();
+                List<decimal> result = new List<decimal>();
 
                 foreach (var item in point)
                     result.Add(item.Peak);
@@ -31,10 +31,10 @@ namespace ProBT
             }
         }
 
-        public List<double> Valley
+        public List<decimal> Valley
         {
             get{
-                List<double> result = new List<double>();
+                List<decimal> result = new List<decimal>();
 
                 foreach (var item in point)
                     result.Add(item.Valley);
@@ -42,10 +42,10 @@ namespace ProBT
             }
         }
 
-        public List<double> Close
+        public List<decimal> Close
         {
             get{
-                List<double> result = new List<double>();
+                List<decimal> result = new List<decimal>();
 
                 foreach (var item in point)
                     result.Add(item.Close);
@@ -80,12 +80,12 @@ namespace ProBT
 
 
 
-        public List<double> DrawDown
+        public List<decimal> DrawDown
         {
             get{
-                List<double> result = new List<double>();
+                List<decimal> result = new List<decimal>();
 
-                double cum_max = 0;
+                decimal cum_max = 0;
 
                 foreach (var item in this.point)
                 {
@@ -133,11 +133,11 @@ namespace ProBT
         int id;
         ORDER_TYPE type;
         DateTime date;
-        double peak;
-        double valley;
-        double close;
+        decimal peak;
+        decimal valley;
+        decimal close;
 
-        public Point(int id, ORDER_TYPE type, DateTime date, double peak, double valley, double close)
+        public Point(int id, ORDER_TYPE type, DateTime date, decimal peak, decimal valley, decimal close)
         {
             this.id = id;
             this.type = type;
@@ -150,19 +150,13 @@ namespace ProBT
         public int ID  {get => this.id;}
         public ORDER_TYPE Type  {get => this.type;}
         public DateTime Date  {get => this.date;}
-        public double Peak  {get => this.peak;}
-        public double Valley  {get => this.valley;}
-        public double Close  {get => this.close;}
+        public decimal Peak  {get => this.peak;}
+        public decimal Valley  {get => this.valley;}
+        public decimal Close  {get => this.close;}
 
         public override string ToString()
         {
-            return 
-            "EQ: " +
-            id + " - " +
-            date + " - " +
-            peak.ToString("F2") + " - " +
-            valley.ToString("F2") + " - " +
-            close.ToString("F2");
+            return $"EQ: - {id} - {date} - {peak.ToString("F2")} - {valley.ToString("F2")} - {close.ToString("F2")}";
         }
     } 
 }

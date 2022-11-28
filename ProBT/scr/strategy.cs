@@ -3,7 +3,7 @@ namespace ProBT
 {
     public abstract class Strategy
     {
-        double bpv;
+        decimal bpv;
         double ts;
         List<DateTime> date;
         List<double> open;
@@ -15,7 +15,8 @@ namespace ProBT
         ListTrades trades;
         Position position;
 
-        public Strategy()
+
+        public Strategy Clean()
         {
             this.position = new Position();
             this.orders = new ListOrders();
@@ -25,10 +26,14 @@ namespace ProBT
             this.high = new List<double>();
             this.low = new List<double>();
             this.close = new List<double>();
+
+            return this;
         }
 
-        public double BPV {get => this.bpv;}
-        public double BigPointValue {get => this.bpv;}
+
+
+        public decimal BPV {get => this.bpv;}
+        public decimal BigPointValue {get => this.bpv;}
         public double TS {get => this.ts;}
         public double TickSize {get => this.ts;}
         public ListOrders Orders {get => this.orders;}
@@ -107,7 +112,7 @@ namespace ProBT
             this.close = _close;
         }
 
-        public void send_attribute(double bpv, double ts)
+        public void send_attribute(decimal bpv, double ts)
         {
             this.bpv = bpv;
             this.ts = ts;
@@ -193,16 +198,16 @@ namespace ProBT
             this.orders.Append(order);
         }
 
-        public void SetStopLossDollar(double amount, string custom_name="")
+        public void SetStopLossDollar(decimal amount, string custom_name="")
         {
             foreach (var order in orders)
-                order.SetStopLoss(amount/BigPointValue);
+                order.SetStopLoss((double)(amount/BigPointValue));
         }
 
-        public void SetTakeProfitDollar(double amount, string custom_name="")
+        public void SetTakeProfitDollar(decimal amount, string custom_name="")
         {
             foreach (var order in orders)
-                order.SetTakeProfit(amount/BigPointValue);
+                order.SetTakeProfit((double)(amount/BigPointValue));
         }
 
         public void SetStopLossPoint(double point, string custom_name="")
@@ -258,8 +263,6 @@ namespace ProBT
 
         public void execute_orders(CHECK_AT _at)
         {
-
-
             bool re_execute = false;
             // Console.WriteLine(_at);
             // # define price to update position already at market
@@ -415,25 +418,25 @@ namespace ProBT
             int id = 0;
             ORDER_TYPE type = ORDER_TYPE.NULL;
             DateTime date = Date[0];
-            double peak = 0;
-            double valley = 0;
-            double point = 0;
-            double balance = Trades.Balance;
+            decimal peak = 0;
+            decimal valley = 0;
+            decimal point = 0;
+            decimal balance = Trades.Balance;
 
             if(MP_LONG)
             {
                 id = Position.ID;
                 type = ORDER_TYPE.BUY;
-                peak = High[0] - Position.EntryPrice;
-                valley = Low[0] - Position.EntryPrice;
+                peak = (decimal)(High[0] - Position.EntryPrice);
+                valley = (decimal)(Low[0] - Position.EntryPrice);
                 point = Position.Profit;
             }
             if(MP_SHORT)
             {
                 id = Position.ID;
                 type = ORDER_TYPE.SELLSHORT;
-                peak = Position.EntryPrice - Low[0];
-                valley = Position.EntryPrice - High[0];
+                peak = (decimal)(Position.EntryPrice - Low[0]);
+                valley = (decimal)(Position.EntryPrice - High[0]);
                 point = Position.Profit;
             }
 

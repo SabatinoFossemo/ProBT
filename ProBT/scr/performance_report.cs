@@ -17,7 +17,7 @@ namespace ProBT
             this.strategy_performance_summary = new StrategyPerformanceSummary(trades, equity);
         }
 
-        public StrategyPerformanceSummary Summary { get => this.strategy_performance_summary;}
+        internal StrategyPerformanceSummary Summary { get => this.strategy_performance_summary;}
 
 
     }
@@ -38,49 +38,49 @@ namespace ProBT
         int num_loss_trades_long;
         int num_loss_trades_short;
 
-        double gross_profit;
-        double gross_profit_long;
-        double gross_profit_short;
+        decimal gross_profit;
+        decimal gross_profit_long;
+        decimal gross_profit_short;
 
-        double gross_loss;
-        double gross_loss_long;
-        double gross_loss_short;
+        decimal gross_loss;
+        decimal gross_loss_long;
+        decimal gross_loss_short;
 
-        double net_profit;
-        double net_profit_long;
-        double net_profit_short;
+        decimal net_profit;
+        decimal net_profit_long;
+        decimal net_profit_short;
 
-        double avg_profit;
-        double avg_profit_long;
-        double avg_profit_short;
+        decimal avg_profit;
+        decimal avg_profit_long;
+        decimal avg_profit_short;
 
-        double avg_loss;
-        double avg_loss_long;
-        double avg_loss_short;
+        decimal avg_loss;
+        decimal avg_loss_long;
+        decimal avg_loss_short;
 
-        double avg_trade;
-        double avg_trade_long;
-        double avg_trade_short;
+        decimal avg_trade;
+        decimal avg_trade_long;
+        decimal avg_trade_short;
 
-        double profit_factor;
-        double profit_factor_long;
-        double profit_factor_short;
+        decimal profit_factor;
+        decimal profit_factor_long;
+        decimal profit_factor_short;
 
-        double percent_profitable;
-        double percent_profitable_long;
-        double percent_profitable_short;
+        decimal percent_profitable;
+        decimal percent_profitable_long;
+        decimal percent_profitable_short;
 
-        double risk_reward;
-        double risk_reward_long;
-        double risk_reward_short;
+        decimal risk_reward;
+        decimal risk_reward_long;
+        decimal risk_reward_short;
 
-        double max_drawdown_close_to_close;
-        double max_drawdown_close_to_close_long;
-        double max_drawdown_close_to_close_short;
+        decimal max_drawdown_close_to_close;
+        decimal max_drawdown_close_to_close_long;
+        decimal max_drawdown_close_to_close_short;
 
-        double max_drawdown_open_equity;
-        double max_drawdown_open_equity_long;
-        double max_drawdown_open_equity_short;
+        decimal max_drawdown_open_equity;
+        decimal max_drawdown_open_equity_long;
+        decimal max_drawdown_open_equity_short;
 
         public StrategyPerformanceSummary(ListTrades trades, Equity equity)
         {
@@ -157,11 +157,11 @@ namespace ProBT
             profit_factor_short = (gross_loss_short != 0) ? gross_profit_short / -gross_loss_short : 0;
             StratSum.Add("ProfitFactorShort", Math.Round(profit_factor_short,2));
 
-            percent_profitable = (num_trades != 0) ? (double)num_profit_trades / (double)num_trades : 0;
+            percent_profitable = (num_trades != 0) ? (decimal)num_profit_trades / (decimal)num_trades : 0;
             StratSum.Add("PercentProfitable", Math.Round(percent_profitable,2));
-            percent_profitable_long = (num_trades_long != 0) ?  (double)num_profit_trades_long /  (double)num_trades_long : 0;
+            percent_profitable_long = (num_trades_long != 0) ?  (decimal)num_profit_trades_long /  (decimal)num_trades_long : 0;
             StratSum.Add("PercentProfitableLong", Math.Round(percent_profitable_long,2));
-            percent_profitable_short = (num_trades_short != 0) ?  (double)num_profit_trades_short /  (double)num_trades_short : 0;
+            percent_profitable_short = (num_trades_short != 0) ?  (decimal)num_profit_trades_short /  (decimal)num_trades_short : 0;
             StratSum.Add("PercentProfitableShort", Math.Round(percent_profitable_short,2));
 
             risk_reward = (avg_loss != 0) ? avg_profit / -avg_loss : 0;

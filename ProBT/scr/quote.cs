@@ -18,10 +18,10 @@ namespace ProBT
         string symbol { get; set; }
         string category { get; set; }
         string sector { get; set; }
-        double bigpointvalue { get; set; }
+        decimal bigpointvalue { get; set; }
         double ticksize { get; set; }
 
-        public Quote(string file, string symbol="NONE", string category="NONE", string sector="NONE", double bigpointvalue=1, double ticksize=1)
+        public Quote(string file, string symbol="NONE", string category="NONE", string sector="NONE", decimal bigpointvalue=1, double ticksize=1)
         {
             date = new List<DateTime>();
             open = new List<double>();
@@ -47,20 +47,20 @@ namespace ProBT
             this.ticksize = ticksize;
         }
 
-        public Quote(Quote in_quote)
-        {
-            date = new List<DateTime>();
-            open = new List<double>();
-            high = new List<double>();
-            low = new List<double>();
-            close = new List<double>();
+        // public Quote(Quote in_quote)
+        // {
+        //     date = new List<DateTime>();
+        //     open = new List<double>();
+        //     high = new List<double>();
+        //     low = new List<double>();
+        //     close = new List<double>();
 
-            this.symbol = in_quote.Symbol;
-            this.category = in_quote.Category;
-            this.sector = in_quote.Sector;
-            this.bigpointvalue = in_quote.BigPointValue;
-            this.ticksize = in_quote.TickSize;
-        }
+        //     this.symbol = in_quote.Symbol;
+        //     this.category = in_quote.Category;
+        //     this.sector = in_quote.Sector;
+        //     this.bigpointvalue = in_quote.BigPointValue;
+        //     this.ticksize = in_quote.TickSize;
+        // }
 
         public Quote(Quote in_quote, List<DateTime> D, List<double> O, List<double> H, List<double> L, List<double> C)
         {
@@ -76,6 +76,20 @@ namespace ProBT
             this.ticksize = in_quote.TickSize;
         }
 
+        public void print_bar(int i)
+        {
+            Console.WriteLine($"{Date[i]} - {Open[i]} - {High[i]} - {Low[i]} - {Close[i]}");
+        }
+
+        // public Dictionary<string, object> Statistics
+        // {
+        //     get{
+        //         Dictionary<string, object> result = new Dictionary<string, object>();
+
+
+        //     }
+        // }
+
 
 
         private List<Bar> ProcessCSV(string path)
@@ -86,19 +100,19 @@ namespace ProBT
                 .Select(Bar.ParseRow).ToList();
         }
 
-        public List<DateTime> Date{get => date;}
-        public List<double> Open{get => open;}
-        public List<double> High{get => high;}
-        public List<double> Low{get => low;}
-        public List<double> Close{get => close;}
+        internal List<DateTime> Date{get => date;}
+        internal List<double> Open{get => open;}
+        internal List<double> High{get => high;}
+        internal List<double> Low{get => low;}
+        internal List<double> Close{get => close;}
 
-        public string Symbol {get => symbol;}
-        public string Category {get => category;}
-        public string Sector {get => sector;}
-        public double TS {get => ticksize;}
-        public double TickSize {get => ticksize;}
-        public double BPV {get => bigpointvalue;}
-        public double BigPointValue {get => bigpointvalue;}
+        internal string Symbol {get => symbol;}
+        internal string Category {get => category;}
+        internal string Sector {get => sector;}
+        internal double TS {get => ticksize;}
+        internal double TickSize {get => ticksize;}
+        internal decimal BPV {get => bigpointvalue;}
+        internal decimal BigPointValue {get => bigpointvalue;}
 
         public void PrintInfo()
         {
@@ -108,21 +122,27 @@ namespace ProBT
             Console.WriteLine("Category       : {0}", category);
             Console.WriteLine("BigPointValue  : {0:0.00}", BPV);
             Console.WriteLine("TickSize       : {0:0.00}", TS);
+            Console.WriteLine("TotalBars      : {0:0.00}", Date.Count);
             Console.WriteLine("*--  samples  -------------*\n");
             Console.WriteLine("               date   open   high    low  close");
             for (int i = 0; i < 5; i++)
                 Console.WriteLine("{0}   {1}   {2}   {3}   {4}",date[i], open[i], high[i], low[i], close[i]);
             Console.WriteLine("*--------------------------*");
         }
+
+        private void Stat()
+        {
+
+        }
     }
 
-    public class Bar
+    internal class Bar
     {
-        public DateTime date { get; set; }
-        public double open { get; set; }
-        public double high { get; set; }
-        public double low { get; set; }
-        public double close { get; set; }
+        internal DateTime date { get; set; }
+        internal double open { get; set; }
+        internal double high { get; set; }
+        internal double low { get; set; }
+        internal double close { get; set; }
 
         internal static Bar ParseRow(string row)
         {
