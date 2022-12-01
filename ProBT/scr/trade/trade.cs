@@ -28,9 +28,9 @@ namespace ProBT
             Name.PadLeft(cw, ' ') + " |" + 
             Type.ToString().PadLeft(cw, ' ') + " |" +
             EntryDate.ToString().PadLeft(cw1, ' ') + " |" + 
-            EntryPrice.ToString("F2").PadLeft(cw, ' ') + " |" + 
+            EntryPrice.ToString().PadLeft(cw, ' ') + " |" + 
             ExitDate.ToString().PadLeft(cw1, ' ') + " |" + 
-            ExitPrice.ToString("F2").PadLeft(cw, ' ') + " |" + 
+            ExitPrice.ToString().PadLeft(cw, ' ') + " |" + 
             StopLoss.ToString("F2").PadLeft(cw, ' ') + " |" + 
             TakeProfit.ToString("F2").PadLeft(cw, ' ') + " |" + 
             ExitReason.PadLeft(cw, ' ') + " |" + 

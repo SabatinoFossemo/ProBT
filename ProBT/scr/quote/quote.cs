@@ -21,6 +21,20 @@ namespace ProBT
         decimal bigpointvalue { get; set; }
         double ticksize { get; set; }
 
+        internal List<DateTime> Date{get => date;}
+        internal List<double> Open{get => open;}
+        internal List<double> High{get => high;}
+        internal List<double> Low{get => low;}
+        internal List<double> Close{get => close;}
+
+        internal string Symbol {get => symbol;}
+        internal string Category {get => category;}
+        internal string Sector {get => sector;}
+        internal double TS {get => ticksize;}
+        internal double TickSize {get => ticksize;}
+        internal decimal BPV {get => bigpointvalue;}
+        internal decimal BigPointValue {get => bigpointvalue;}
+
         public Quote(string file, string symbol="NONE", string category="NONE", string sector="NONE", decimal bigpointvalue=1, double ticksize=1)
         {
             date = new List<DateTime>();
@@ -47,20 +61,6 @@ namespace ProBT
             this.ticksize = ticksize;
         }
 
-        // public Quote(Quote in_quote)
-        // {
-        //     date = new List<DateTime>();
-        //     open = new List<double>();
-        //     high = new List<double>();
-        //     low = new List<double>();
-        //     close = new List<double>();
-
-        //     this.symbol = in_quote.Symbol;
-        //     this.category = in_quote.Category;
-        //     this.sector = in_quote.Sector;
-        //     this.bigpointvalue = in_quote.BigPointValue;
-        //     this.ticksize = in_quote.TickSize;
-        // }
 
         public Quote(Quote in_quote, List<DateTime> D, List<double> O, List<double> H, List<double> L, List<double> C)
         {
@@ -81,17 +81,6 @@ namespace ProBT
             Console.WriteLine($"{Date[i]} - {Open[i]} - {High[i]} - {Low[i]} - {Close[i]}");
         }
 
-        // public Dictionary<string, object> Statistics
-        // {
-        //     get{
-        //         Dictionary<string, object> result = new Dictionary<string, object>();
-
-
-        //     }
-        // }
-
-
-
         private List<Bar> ProcessCSV(string path)
         {
             return File.ReadAllLines(path)
@@ -99,20 +88,6 @@ namespace ProBT
                 .Where(row => row.Length > 0)
                 .Select(Bar.ParseRow).ToList();
         }
-
-        internal List<DateTime> Date{get => date;}
-        internal List<double> Open{get => open;}
-        internal List<double> High{get => high;}
-        internal List<double> Low{get => low;}
-        internal List<double> Close{get => close;}
-
-        internal string Symbol {get => symbol;}
-        internal string Category {get => category;}
-        internal string Sector {get => sector;}
-        internal double TS {get => ticksize;}
-        internal double TickSize {get => ticksize;}
-        internal decimal BPV {get => bigpointvalue;}
-        internal decimal BigPointValue {get => bigpointvalue;}
 
         public void PrintInfo()
         {
@@ -123,6 +98,16 @@ namespace ProBT
             Console.WriteLine("BigPointValue  : {0:0.00}", BPV);
             Console.WriteLine("TickSize       : {0:0.00}", TS);
             Console.WriteLine("TotalBars      : {0:0.00}", Date.Count);
+            Console.WriteLine("DateFrom       : {0}", Stat["DateFrom"]);
+            Console.WriteLine("DateTo         : {0}", Stat["DateTo"]);
+            Console.WriteLine("Omin           : {0}", Stat["OpenMin"]);
+            Console.WriteLine("Omax           : {0}", Stat["OpenMax"]);
+            Console.WriteLine("Hmin           : {0}", Stat["HighMin"]);
+            Console.WriteLine("Hmax           : {0}", Stat["HighMax"]);
+            Console.WriteLine("Lmin           : {0}", Stat["LowMin"]);
+            Console.WriteLine("Lmax           : {0}", Stat["LowMax"]);
+            Console.WriteLine("Cmin           : {0}", Stat["CloseMin"]);
+            Console.WriteLine("Cmax           : {0}", Stat["CloseMax"]);
             Console.WriteLine("*--  samples  -------------*\n");
             Console.WriteLine("               date   open   high    low  close");
             for (int i = 0; i < 5; i++)
@@ -130,9 +115,38 @@ namespace ProBT
             Console.WriteLine("*--------------------------*");
         }
 
-        private void Stat()
+        private Dictionary<string, object> Stat
         {
+            get{
+                Dictionary<string, object> result = new Dictionary<string, object>();
+                result.Add("DateFrom", Date.Min());
+                result.Add("DateTo", Date.Max());
+                result.Add("OpenMin", Open.Min());
+                result.Add("OpenMax", Open.Max());
+                result.Add("HighMin", High.Min());
+                result.Add("HighMax", High.Max());
+                result.Add("LowMin", Low.Min());
+                result.Add("LowMax", Low.Max());
+                result.Add("CloseMin", Close.Min());
+                result.Add("CloseMax", Close.Max());
+                
+                return result;
+            }
+        }
 
+        public void AdjValueBelow0()
+        {
+            double min_val = Low.Min() - 1.0;
+
+            if(min_val<0)
+                min_val *= -1;
+                for (int i = 0; i < Date.Count; i++)
+                {
+                    Open[i] = (Open[i] + min_val).RoundTicks(this.TickSize);
+                    High[i] = (High[i] + min_val).RoundTicks(this.TickSize);
+                    Low[i] = (Low[i] + min_val).RoundTicks(this.TickSize);
+                    Close[i] = (Close[i] + min_val).RoundTicks(this.TickSize);
+                }
         }
     }
 
@@ -156,17 +170,6 @@ namespace ProBT
                 low   = double.Parse(columns[3], System.Globalization.CultureInfo.InvariantCulture),
                 close = double.Parse(columns[4], System.Globalization.CultureInfo.InvariantCulture)
             };
-        }
-
-        public override string ToString()
-        {
-            string result = string.Concat(date.ToString() + ' ' +  
-            string.Format("{0:0.00}",open) + ' ' + 
-            string.Format("{0:0.00}",high) + ' ' + 
-            string.Format("{0:0.00}",low) + ' ' + 
-            string.Format("{0:0.00}",close)
-            );
-            return result;
         }
     }
 

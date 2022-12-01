@@ -201,25 +201,25 @@ namespace ProBT
         public void SetStopLossDollar(decimal amount, string custom_name="")
         {
             foreach (var order in orders)
-                order.SetStopLoss((double)(amount/BigPointValue));
+                order.SetStopLoss(Convert.ToDouble(amount/BigPointValue).RoundTicks(TS));
         }
 
         public void SetTakeProfitDollar(decimal amount, string custom_name="")
         {
             foreach (var order in orders)
-                order.SetTakeProfit((double)(amount/BigPointValue));
+                order.SetTakeProfit(Convert.ToDouble(amount/BigPointValue).RoundTicks(TS));
         }
 
         public void SetStopLossPoint(double point, string custom_name="")
         {
             foreach (var order in orders)
-                order.SetStopLoss(point);
+                order.SetStopLoss(point.RoundTicks(TS));
         }
 
         public void SetTakeProfitPoint(double point, string custom_name="")
         {
             foreach (var order in orders)
-                order.SetTakeProfit(point);
+                order.SetTakeProfit(point.RoundTicks(TS));
         }
 
 

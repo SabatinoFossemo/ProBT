@@ -15,12 +15,12 @@ namespace ProBT
 
         }
 
-        public void AddPoint(Point point)
+        internal void AddPoint(Point point)
         {
             this.point.Add(point);
         }
 
-        public List<decimal> Peak
+        internal List<decimal> Peak
         {
             get{
                 List<decimal> result = new List<decimal>();
@@ -31,7 +31,7 @@ namespace ProBT
             }
         }
 
-        public List<decimal> Valley
+        internal List<decimal> Valley
         {
             get{
                 List<decimal> result = new List<decimal>();
@@ -42,7 +42,7 @@ namespace ProBT
             }
         }
 
-        public List<decimal> Close
+        internal List<decimal> Close
         {
             get{
                 List<decimal> result = new List<decimal>();
@@ -53,7 +53,7 @@ namespace ProBT
             }
         }
 
-        public Equity EquityLong 
+        internal Equity EquityLong 
         {
             get{
                 Equity result = new Equity(this.initial_balance);
@@ -64,7 +64,7 @@ namespace ProBT
                 return result;
             }
         }
-        public Equity EquityShort 
+        internal Equity EquityShort 
         {
             get{
                 Equity result = new Equity(this.initial_balance);
@@ -76,11 +76,7 @@ namespace ProBT
             }
         }
         
-
-
-
-
-        public List<decimal> DrawDown
+        internal List<decimal> DrawDown
         {
             get{
                 List<decimal> result = new List<decimal>();
@@ -147,12 +143,12 @@ namespace ProBT
             this.close = close;
         }
 
-        public int ID  {get => this.id;}
-        public ORDER_TYPE Type  {get => this.type;}
-        public DateTime Date  {get => this.date;}
-        public decimal Peak  {get => this.peak;}
-        public decimal Valley  {get => this.valley;}
-        public decimal Close  {get => this.close;}
+        internal int ID  {get => this.id;}
+        internal ORDER_TYPE Type  {get => this.type;}
+        internal DateTime Date  {get => this.date;}
+        internal decimal Peak  {get => this.peak;}
+        internal decimal Valley  {get => this.valley;}
+        internal decimal Close  {get => this.close;}
 
         public override string ToString()
         {

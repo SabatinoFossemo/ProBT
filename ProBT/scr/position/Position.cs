@@ -96,7 +96,7 @@ namespace ProBT
             if(this.Type == ORDER_TYPE.NULL)
                 return "POS: FLAT";
             else
-                return $"POS: {id}  - {name} - {type} - {entry_date} - {entry_price.ToString("F2")} - {sl.ToString("F2")} - {tp.ToString("F2")} - {mae.ToString("F2")} + - {mfe.ToString("F2")} - {profit.ToString("F2")}";
+                return $"POS: {id}  - {name} - {type} - {entry_date} - {entry_price.ToString()} - {sl.ToString("F2")} - {tp.ToString("F2")} - {mae.ToString("F2")} + - {mfe.ToString("F2")} - {profit.ToString("F2")}";
         }
 
         internal Position Update(double h, double l, double c, decimal bpv)
