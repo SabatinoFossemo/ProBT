@@ -3,66 +3,48 @@ namespace ProBT
 {
     public abstract class Strategy
     {
-        decimal bpv;
-        double ts;
-        List<DateTime> date;
-        List<double> open;
-        List<double> high;
-        List<double> low;
-        List<double> close;
+        // CLASS VARIABLE  ................................................................................................................................................
+        internal List<DateTime> Date {get; set;} = new List<DateTime>();
+        internal List<double> Open {get; set;} = new List<double>();
+        internal List<double> High {get; set;} = new List<double>();
+        internal List<double> Low {get; set;} = new List<double>();
+        internal List<double> Close {get; set;} = new List<double>();
+        internal decimal BigPointValue {get; set;} 
+        internal double TickSize {get; set;} 
 
-        ListOrders orders;
-        ListTrades trades;
-        Position position;
+        internal ListOrders Orders {get; set;} = new ListOrders();
+        internal ListTrades Trades {get; set;} = new ListTrades();
+        internal Position Position {get; set;} = new Position();
 
-
-        public Strategy Clean()
-        {
-            this.position = new Position();
-            this.orders = new ListOrders();
-            this.trades = new ListTrades();
-            this.date = new List<DateTime>();
-            this.open = new List<double>();
-            this.high = new List<double>();
-            this.low = new List<double>();
-            this.close = new List<double>();
-
-            return this;
+        // CONSTRUCTOR ................................................................................................................................................
+        public Strategy(){
+            this.Date = new List<DateTime>();
+            this.Open = new List<double>();
+            this.High = new List<double>();
+            this.Low = new List<double>();
+            this.Close = new List<double>();
+            this.Orders = new ListOrders();
+            this.Trades = new ListTrades();
+            this.Position = new Position();
         }
 
-
-
-        public decimal BPV {get => this.bpv;}
-        public decimal BigPointValue {get => this.bpv;}
-        public double TS {get => this.ts;}
-        public double TickSize {get => this.ts;}
-        public ListOrders Orders {get => this.orders;}
-        public ListTrades Trades {get => this.trades;}
-        public Position Position {get => this.position;}
-
-        // abstract methods for implementation of custom strategy
-        public abstract void Iniialize();
-        public abstract void OnBarUpdate();
-        public abstract void Deinitialize();
-
-        // Properties
-
-        public List<DateTime> D {get => this.date;}
-        public List<DateTime> Date {get => this.date;}
-        public List<double> O {get => this.open;}
-        public List<double> Open {get => this.open;}
-        public List<double> H {get => this.high;}
-        public List<double> High {get => this.high;}
-        public List<double> L {get => this.low;}
-        public List<double> Low {get => this.low;}
-        public List<double> C {get => this.close;}
-        public List<double> Close {get => this.close;}
+        // PROPERTIES ................................................................................................................................................
+        public List<DateTime> D {get => this.Date;}
+        public List<double> O {get => this.Open;}
+        public List<double> H {get => this.High;}
+        public List<double> L {get => this.Low;}
+        public List<double> C {get => this.Close;}
+        public decimal BPV {get => this.BigPointValue;}
+        public double TS {get => this.TickSize;}
+        public MARKETPOSITION MP {get => this.MarketPosition;}
+        public bool MP_LONG { get => MarketPosition == MARKETPOSITION.LONG; }
+        public bool MP_SHORT { get => MarketPosition == MARKETPOSITION.SHORT; }
+        public bool MP_FLAT { get => MarketPosition == MARKETPOSITION.FLAT; }
+        public bool AtMarket { get => MarketPosition == MARKETPOSITION.LONG || MarketPosition == MARKETPOSITION.SHORT; }
         public string current_bar {get => string.Concat(D[0]," - ", O[0]," - ", H[0]," - ", L[0]," - ", C[0]);}
 
-        public MARKETPOSITION MarketPosition
-        {
-            get 
-            {
+        public MARKETPOSITION MarketPosition{
+            get {
                 if(Position.Type == ORDER_TYPE.BUY)  
                     return MARKETPOSITION.LONG;
                 else if(Position.Type == ORDER_TYPE.SELLSHORT)
@@ -72,188 +54,157 @@ namespace ProBT
             }
         }
 
-        public MARKETPOSITION MP {get => this.MarketPosition;}
+        // abstract methods for implementation of custom strategy ................................................................................................
+        public abstract void Iniialize();
+        public abstract void OnBarUpdate();
+        public abstract void Deinitialize();
 
-        public bool MP_LONG
-        {
-            get{if(MarketPosition == MARKETPOSITION.LONG) return true;
-            else return false;}
-        }
-        public bool MP_SHORT
-        {
-            get{if(MarketPosition == MARKETPOSITION.SHORT) return true;
-            else return false;}
-        }
-
-        public bool MP_FLAT
-        {
-            get{if(MarketPosition == MARKETPOSITION.FLAT) return true;
-            else return false;}
-        }
-
-        public bool AtMarket
-        {
-            get{if(MarketPosition == MARKETPOSITION.LONG || MarketPosition == MARKETPOSITION.SHORT) return true;
-            else return false;}
+        // METHODS ................................................................................................................................................
+        public Strategy Clean(){
+            this.Date = new List<DateTime>();
+            this.Open = new List<double>();
+            this.High = new List<double>();
+            this.Low = new List<double>();
+            this.Close = new List<double>();
+            ListOrders Orders = new ListOrders();
+            ListTrades Trades = new ListTrades();
+            Position Position = new Position();
+            return this;
         }
 
-
-        public void DeleteOrders()
-        {
-            this.orders = orders.Delete();
+        public void DeleteOrders(){
+            this.Orders = Orders.Delete();
         }
 
-        public void update_quote(List<DateTime> _date, List<double> _open, List<double> _high, List<double> _low, List<double> _close)
-        {
-            this.date = _date;
-            this.open = _open;
-            this.high = _high;
-            this.low = _low;
-            this.close = _close;
+        public void update_quote(List<DateTime> _date, List<double> _open, List<double> _high, List<double> _low, List<double> _close){
+            this.Date = _date;
+            this.Open = _open;
+            this.High = _high;
+            this.Low = _low;
+            this.Close = _close;
         }
 
-        public void send_attribute(decimal bpv, double ts)
-        {
-            this.bpv = bpv;
-            this.ts = ts;
+        public void send_attribute(decimal bpv, double ts){
+            this.BigPointValue = bpv;
+            this.TickSize = ts;
         }
 
-        public void Buy(string price, string entry_name)
-        {
-            if(price == "open") 
-            {
-                Order order = new Order(ORDER_TYPE.BUY, ORDER_PRICE.OPEN, entry_name);
-                this.orders.Append(order);
+        public void Buy(string price, string entry_name){
+            if(price == "open") {
+                IOrder order = new Order(ORDER_TYPE.BUY, ORDER_PRICE.OPEN, entry_name);
+                this.Orders.Append(order);
             }
 
-            else if(price == "close") 
-            {
+            else if(price == "close") {
                 Order order = new Order(ORDER_TYPE.BUY, ORDER_PRICE.CLOSE, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
+            else 
+                throw new ArgumentException(String.Format("{0} is not an valid price", price), "price");        
         }
-        public void Buy(double price, string entry_name)
-        {
+    
+        public void Buy(double price, string entry_name){
             Order order = new Order(ORDER_TYPE.BUY, price, entry_name);
-            this.orders.Append(order);
+            this.Orders.Append(order);
         }
 
-        public void Sell(string price, string entry_name)
-        {
-            if(price == "open") 
-            {
+        public void Sell(string price, string entry_name){
+            if(price == "open") {
                 Order order = new Order(ORDER_TYPE.SELL, ORDER_PRICE.OPEN, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
-
-            else if(price == "close") 
-            {
+            else if(price == "close") {
                 Order order = new Order(ORDER_TYPE.SELL, ORDER_PRICE.CLOSE, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
         }
-        public void Sell(double price, string entry_name)
-        {
+
+        public void Sell(double price, string entry_name){
             Order order = new Order(ORDER_TYPE.SELL, price, entry_name);
-            this.orders.Append(order);
+            this.Orders.Append(order);
         }
 
-        public void SellShort(string price, string entry_name)
-        {
-            if(price == "open") 
-            {
+        public void SellShort(string price, string entry_name){
+            if(price == "open") {
                 Order order = new Order(ORDER_TYPE.SELLSHORT, ORDER_PRICE.OPEN, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
-
-            else if(price == "close") 
-            {
+            else if(price == "close") {
                 Order order = new Order(ORDER_TYPE.SELLSHORT, ORDER_PRICE.CLOSE, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
         }
-        public void SellShort(double price, string entry_name)
-        {
+
+        public void SellShort(double price, string entry_name){
             Order order = new Order(ORDER_TYPE.SELLSHORT, price, entry_name);
-            this.orders.Append(order);
+            this.Orders.Append(order);
         }
         
-        public void BuyToCover(string price, string entry_name)
-        {
-            if(price == "open") 
-            {
+        public void BuyToCover(string price, string entry_name){
+            if(price == "open") {
                 Order order = new Order(ORDER_TYPE.BUYTOCOVER, ORDER_PRICE.OPEN, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
-
-            else if(price == "close") 
-            {
+            else if(price == "close") {
                 Order order = new Order(ORDER_TYPE.BUYTOCOVER, ORDER_PRICE.CLOSE, entry_name);
-                this.orders.Append(order);
+                this.Orders.Append(order);
             }
         }
-        public void BuyToCover(double price, string entry_name)
-        {
+
+        public void BuyToCover(double price, string entry_name){
             Order order = new Order(ORDER_TYPE.BUYTOCOVER, price, entry_name);
-            this.orders.Append(order);
+            this.Orders.Append(order);
         }
 
-        public void SetStopLossDollar(decimal amount, string custom_name="")
-        {
-            foreach (var order in orders)
+        public void SetStopLossDollar(decimal amount){
+            foreach (var order in this.Orders)
                 order.SetStopLoss(Convert.ToDouble(amount/BigPointValue).RoundTicks(TS));
         }
 
-        public void SetTakeProfitDollar(decimal amount, string custom_name="")
-        {
-            foreach (var order in orders)
+        public void SetTakeProfitDollar(decimal amount){
+            foreach (var order in this.Orders)
                 order.SetTakeProfit(Convert.ToDouble(amount/BigPointValue).RoundTicks(TS));
         }
 
-        public void SetStopLossPoint(double point, string custom_name="")
-        {
-            foreach (var order in orders)
+        public void SetStopLossPoint(double point){
+            foreach (var order in this.Orders)
                 order.SetStopLoss(point.RoundTicks(TS));
         }
 
-        public void SetTakeProfitPoint(double point, string custom_name="")
-        {
-            foreach (var order in orders)
+        public void SetTakeProfitPoint(double point){
+            foreach (var order in this.Orders)
                 order.SetTakeProfit(point.RoundTicks(TS));
         }
 
 
-        public bool StopOrProfitIsHit(double high_value, double low_value, double price_stop, double price_profit)
-        {
+        public bool StopOrProfitIsHit(double high_value, double low_value, double price_stop, double price_profit){
             bool result = false;
-            if(position.StopLoss>0){
-                if((position.Type == ORDER_TYPE.BUY && low_value<=position.StopLoss) || (position.Type == ORDER_TYPE.SELLSHORT && high_value>=position.StopLoss)){
+            if(this.Position.StopLoss>0){
+                if((this.Position.Type == ORDER_TYPE.BUY && low_value<=this.Position.StopLoss) || (this.Position.Type == ORDER_TYPE.SELLSHORT && high_value>=this.Position.StopLoss)){
                     result = true;
-                    if(position.Type == ORDER_TYPE.BUY)
-                        position = position.Update(high_value, price_stop, price_stop, BPV);
-                    if(position.Type == ORDER_TYPE.SELLSHORT)
-                        position = position.Update(price_stop, low_value, price_stop, BPV);
-                    // # close position
-                    Trade trade = position.Close(Date[0], price_stop, "SL");
-                    position = position.Reset();
+                    if(this.Position.Type == ORDER_TYPE.BUY)
+                        this.Position = this.Position.Update(high_value, price_stop, price_stop, BPV);
+                    if(this.Position.Type == ORDER_TYPE.SELLSHORT)
+                        this.Position = this.Position.Update(price_stop, low_value, price_stop, BPV);
+                    // # close this.Position
+                    Trade trade = this.Position.Close(Date[0], price_stop, "SL");
+                    this.Position = this.Position.Reset();
                     // # append trade to list
-                    trades.Append(trade);
+                    this.Trades.Append(trade);
                 }
             }
-
-            if(position.TakeProfit>0){
-                if((position.Type == ORDER_TYPE.BUY && high_value>=position.TakeProfit) || (position.Type == ORDER_TYPE.SELLSHORT && low_value<=position.TakeProfit)){
+            if(this.Position.TakeProfit>0){
+                if((this.Position.Type == ORDER_TYPE.BUY && high_value>=this.Position.TakeProfit) || (this.Position.Type == ORDER_TYPE.SELLSHORT && low_value<=this.Position.TakeProfit)){
                     result = true;
-                    if(position.Type == ORDER_TYPE.BUY)
-                        position = position.Update(price_profit, low_value, price_profit, BPV);
-                    if(position.Type == ORDER_TYPE.SELLSHORT)
-                        position = position.Update(high_value, price_profit, price_profit, BPV);
-
+                    if(this.Position.Type == ORDER_TYPE.BUY)
+                        this.Position = this.Position.Update(price_profit, low_value, price_profit, BPV);
+                    if(this.Position.Type == ORDER_TYPE.SELLSHORT)
+                        this.Position = this.Position.Update(high_value, price_profit, price_profit, BPV);
                     // # close position
-                    Trade trade = position.Close(Date[0], price_profit, "TP");
-                    position = position.Reset();
+                    Trade trade = this.Position.Close(Date[0], price_profit, "TP");
+                    this.Position = this.Position.Reset();
                     // # append trade to list
-                    trades.Append(trade);
+                    this.Trades.Append(trade);
                 }
             }
 
@@ -261,13 +212,11 @@ namespace ProBT
         }
 
 
-        public void execute_orders(CHECK_AT _at)
-        {
+        public void execute_orders(CHECK_AT _at){
             bool re_execute = false;
             // Console.WriteLine(_at);
             // # define price to update position already at market
-            foreach (var ord in Orders)
-            {
+            foreach (var ord in Orders){
                 bool buy_on_buy = MP_LONG && (ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.BUYTOCOVER);
                 bool sell_on_sell = MP_SHORT && (ord.Type == ORDER_TYPE.SELL || ord.Type == ORDER_TYPE.SELLSHORT);
                 bool nothing_to_close = MP_FLAT && (ord.Type == ORDER_TYPE.SELL || ord.Type == ORDER_TYPE.BUYTOCOVER);
@@ -279,32 +228,28 @@ namespace ProBT
                     continue;
 
                 // # fill at open
-                if( _at == CHECK_AT.OPEN)
-                {
+                if( _at == CHECK_AT.OPEN){
                   // # define gap
-                    bool gap = (open[0] >= ord.PriceD && high[1] < ord.PriceD) || (open[0] <= ord.PriceD && low[1] > ord.PriceD);
+                    bool gap = (Open[0] >= ord.PriceD && High[1] < ord.PriceD) || (Open[0] <= ord.PriceD && Low[1] > ord.PriceD);
                     gap = gap && ord.PriceD > 0;
-                    // # if price is open or there is an opening gap
-                    if(ord.PriceS == ORDER_PRICE.OPEN || gap)
-                    {   
+                    // # if price is Open or there is an opening gap
+                    if(ord.PriceS == ORDER_PRICE.OPEN || gap){   
                         // # if already at market check to close
-                        if(AtMarket)
-                        {
+                        if(AtMarket){
                             // # close position
-                            Trade trade = position.Close(Date[0], Open[0], "ORD");
-                            position = position.Reset();
+                            Trade trade = this.Position.Close(Date[0], Open[0], "ORD");
+                            this.Position = this.Position.Reset();
                 
                             // # append trade to list
-                            trades.Append(trade);
+                            this.Trades.Append(trade);
 
                             //remove order for recalculation
                             this.Orders.Remove(ord);
                             re_execute = true;
                         }
                         // # check entry ord
-                        if(ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.SELLSHORT)
-                        {
-                            position = new Position(Trades.NumTrades+1, ord, Date[0], Open[0]);
+                        if(ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.SELLSHORT){
+                            this.Position = new Position(Trades.NumTrades+1, ord, Date[0], Open[0]);
 
                             //remove order for recalculation
                             this.Orders.Remove(ord);
@@ -313,32 +258,28 @@ namespace ProBT
                     }
                 }
                 // # fill during next session
-                else if( _at == CHECK_AT.SESSION && ord.PriceD >0)
-                {
+                else if( _at == CHECK_AT.SESSION && ord.PriceD >0){
                     // # if price is float
-                    if(High[0] >= ord.PriceD  && ord.PriceD >= Low[0])
-                    {
+                    if(High[0] >= ord.PriceD  && ord.PriceD >= Low[0]){
                         // # if already at market check to close
-                        if(AtMarket)
-                        {
+                        if(AtMarket){
                             // # update before close
-                            position = position.Update(High[0], Low[0], ord.PriceD, BPV);
+                            this.Position = this.Position.Update(High[0], Low[0], ord.PriceD, BPV);
 
                             // # close position
-                            Trade trade = position.Close(Date[0], ord.PriceD, "ORD");
-                            position = position.Reset();
+                            Trade trade = this.Position.Close(Date[0], ord.PriceD, "ORD");
+                            this.Position = this.Position.Reset();
 
                             // # append trade to list
-                            trades.Append(trade);
+                            this.Trades.Append(trade);
 
                             //remove order for recalculation
                             this.Orders.Remove(ord);
                             re_execute = true;
                         }
                         // # check entry ord
-                        if(ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.SELLSHORT)
-                        {
-                            position =  new Position(Trades.NumTrades+1, ord, Date[0], ord.PriceD);
+                        if(ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.SELLSHORT){
+                            this.Position =  new Position(Trades.NumTrades+1, ord, Date[0], ord.PriceD);
 
                             //remove order for recalculation
                             this.Orders.Remove(ord);
@@ -347,32 +288,28 @@ namespace ProBT
                     }
                 }
                 // # fill at close
-                else if( _at == CHECK_AT.CLOSE)
-                {
+                else if( _at == CHECK_AT.CLOSE){
                     // # if price is close
-                    if (ord.PriceS == ORDER_PRICE.CLOSE)
-                    {
+                    if (ord.PriceS == ORDER_PRICE.CLOSE){
                         // # if already at market check to close
-                        if(AtMarket)
-                        {
-                            // # update before close
-                            // position = position.Update(High[0], Low[0], Close[0], BPV);
+                        if(AtMarket){
+                            //# update before close
+                            this.Position = this.Position.Update(High[0], Low[0], Close[0], BPV);
 
                             // # close position
-                            Trade trade = position.Close(Date[0], Close[0], "ORD");
-                            position = position.Reset();
+                            Trade trade = this.Position.Close(Date[0], Close[0], "ORD");
+                            this.Position = this.Position.Reset();
 
                             // # append trade to list
-                            trades.Append(trade);
+                            this.Trades.Append(trade);
 
                             //remove order for recalculation
                             this.Orders.Remove(ord);
                             re_execute = true;
                         }
                         // # check entry ord
-                        if(ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.SELLSHORT)
-                        {
-                            position = new Position(Trades.NumTrades+1, ord, Date[0], Close[0]);
+                        if(ord.Type == ORDER_TYPE.BUY || ord.Type == ORDER_TYPE.SELLSHORT){
+                            this.Position = new Position(Trades.NumTrades+1, ord, Date[0], Close[0]);
 
                             //remove order for recalculation
                             this.Orders.Remove(ord);
@@ -385,18 +322,17 @@ namespace ProBT
             }
 
             // Update Open Position Profit
-            if (AtMarket)
-            {
+            if (AtMarket){
                 if(_at == CHECK_AT.OPEN){
                     if(!StopOrProfitIsHit(O[0],O[0],O[0],O[0]))
-                        position = position.Update(O[0], O[0], O[0], BPV);
+                        this.Position = this.Position.Update(O[0], O[0], O[0], BPV);
                 }
                 else if(_at == CHECK_AT.SESSION) {
-                    if(!StopOrProfitIsHit(H[0],L[0],position.StopLoss, position.TakeProfit))   
-                        position = position.Update(H[0], L[0], C[0], BPV);
+                    if(!StopOrProfitIsHit(H[0],L[0],this.Position.StopLoss, this.Position.TakeProfit))   
+                        this.Position = this.Position.Update(H[0], L[0], C[0], BPV);
                 }  
                 else if(_at == CHECK_AT.CLOSE) {
-                    position = position.Update(C[0], C[0], C[0], BPV);
+                    this.Position = this.Position.Update(C[0], C[0], C[0], BPV);
                 }  
             }
 
@@ -413,8 +349,7 @@ namespace ProBT
    
         }
 
-        public Point GetPoint()
-        {
+        public Point GetPoint(){
             int id = 0;
             ORDER_TYPE type = ORDER_TYPE.NULL;
             DateTime date = Date[0];
@@ -423,16 +358,14 @@ namespace ProBT
             decimal point = 0;
             decimal balance = Trades.Balance;
 
-            if(MP_LONG)
-            {
+            if(MP_LONG){
                 id = Position.ID;
                 type = ORDER_TYPE.BUY;
                 peak = (decimal)(High[0] - Position.EntryPrice);
                 valley = (decimal)(Low[0] - Position.EntryPrice);
                 point = Position.Profit;
             }
-            if(MP_SHORT)
-            {
+            if(MP_SHORT){
                 id = Position.ID;
                 type = ORDER_TYPE.SELLSHORT;
                 peak = (decimal)(Position.EntryPrice - Low[0]);
@@ -451,6 +384,5 @@ namespace ProBT
             
             return result;
         }
-
     }
 }

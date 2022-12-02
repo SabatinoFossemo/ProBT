@@ -2,21 +2,17 @@ namespace ProBT
 {
     public class ListTrades
     {
-        List<Trade> trades;
+        public List<Trade> Trades{get;}
 
-        public ListTrades()
-        {
-            this.trades = new List<Trade>();
+        public ListTrades(){
+            this.Trades = new List<Trade>();
         }
 
-        internal List<Trade> Trades{get => this.trades;}
-        internal int NumTrades {get => this.trades.Count();}
-        internal int NumTradesLong {get => this.trades.Count(a => a.Type == ORDER_TYPE.BUY);}
-        internal int NumTradesShort {get => this.trades.Count(a => a.Type == ORDER_TYPE.SELLSHORT);}
+        public int NumTrades {get => this.Trades.Count();}
+        public int NumTradesLong {get => this.Trades.Count(a => a.Type == ORDER_TYPE.BUY);}
+        public int NumTradesShort {get => this.Trades.Count(a => a.Type == ORDER_TYPE.SELLSHORT);}
 
-
-        internal ListTrades TradesLong 
-        {
+        internal ListTrades TradesLong {
             get{
                 ListTrades result = new ListTrades();
                 foreach (var item in this.Trades)
@@ -25,8 +21,8 @@ namespace ProBT
                 return result;
             }
         }
-        internal ListTrades TradesShort
-        {
+
+        internal ListTrades TradesShort{
             get{
                 ListTrades result = new ListTrades();
                 foreach (var item in this.Trades)
@@ -36,8 +32,7 @@ namespace ProBT
             }
         }
 
-        internal List<decimal> Profit 
-        {
+        internal List<decimal> Profit {
             get{
                 List<decimal> result = new List<decimal>();
                 foreach (var item in this.Trades)
@@ -46,8 +41,7 @@ namespace ProBT
             }
         }
 
-        internal List<decimal> Equity
-        {
+        internal List<decimal> Equity{
             get{
                 List<decimal> result = new List<decimal>();
                 result.Add(0);
@@ -60,8 +54,7 @@ namespace ProBT
             }
         }
 
-        internal List<decimal> DrawDown
-        {
+        internal List<decimal> DrawDown{
             get{
 
                 List<decimal> result = new List<decimal>();
@@ -76,20 +69,17 @@ namespace ProBT
             }
         }
 
-        internal decimal Balance
-        {
+        internal decimal Balance{
             get{return this.Profit.Sum();}
         }
 
 
-        internal void Append(Trade trade)
-        {
-            this.trades.Add(trade);
+        internal void Append(Trade trade){
+            this.Trades.Add(trade);
         }
 
 
-        public override string ToString()
-        {
+        public override string ToString(){
             string result =  
             "TRD: " +
             "   ID |"  + 
@@ -107,36 +97,31 @@ namespace ProBT
             "    Profit |" + "\n";
 
             
-            foreach (var item in trades)
-            {
+            foreach (var item in this.Trades)
                 result+=item.ToString() + "\n";
-            }
+            
             return result;
         }
 
-        public MyEnumerator GetEnumerator()
-        {  
+        public MyEnumerator GetEnumerator(){  
             return new MyEnumerator(this);  
         }  
 
         // Declare the enumerator class:  
-        public class MyEnumerator
-        {  
+        public class MyEnumerator{  
             int nIndex;  
             ListTrades collection;  
-            public MyEnumerator(ListTrades coll)
-            {  
+            public MyEnumerator(ListTrades coll){  
                 collection = coll;  
                 nIndex = -1;  
             }  
     
-            public bool MoveNext()
-            {  
+            public bool MoveNext(){  
                 nIndex++;  
-                return (nIndex < collection.trades.Count());  
+                return (nIndex < collection.Trades.Count());  
             }  
   
-            public Trade Current => collection.trades[nIndex];
+            public Trade Current => collection.Trades[nIndex];
         }  
     }
 }

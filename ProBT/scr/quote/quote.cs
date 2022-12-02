@@ -1,79 +1,60 @@
-//using Microsoft.Data.Analysis;
-using System.Text;
-using System.Linq;
-using System;
-
-//using Microsoft.AspNetCore.Html;
 
 namespace ProBT
 {
-    public class Quote
+    public class Quote: IQuote
     {
-        List<DateTime> date;
-        List<double> open;
-        List<double> high;
-        List<double> low;
-        List<double> close;
+        public List<DateTime> Date {get; }
+        public List<double> Open {get; }
+        public List<double> High {get; }
+        public List<double> Low {get; }
+        public List<double> Close {get; }
 
-        string symbol { get; set; }
-        string category { get; set; }
-        string sector { get; set; }
-        decimal bigpointvalue { get; set; }
-        double ticksize { get; set; }
+        public string Symbol {get; }
+        public string Category {get; }
+        public string Sector {get; }
+        public double TickSize {get; }
+        public decimal BigPointValue {get; }
 
-        internal List<DateTime> Date{get => date;}
-        internal List<double> Open{get => open;}
-        internal List<double> High{get => high;}
-        internal List<double> Low{get => low;}
-        internal List<double> Close{get => close;}
-
-        internal string Symbol {get => symbol;}
-        internal string Category {get => category;}
-        internal string Sector {get => sector;}
-        internal double TS {get => ticksize;}
-        internal double TickSize {get => ticksize;}
-        internal decimal BPV {get => bigpointvalue;}
-        internal decimal BigPointValue {get => bigpointvalue;}
 
         public Quote(string file, string symbol="NONE", string category="NONE", string sector="NONE", decimal bigpointvalue=1, double ticksize=1)
         {
-            date = new List<DateTime>();
-            open = new List<double>();
-            high = new List<double>();
-            low = new List<double>();
-            close = new List<double>();
+            Date = new List<DateTime>();
+            Open = new List<double>();
+            High = new List<double>();
+            Low = new List<double>();
+            Close = new List<double>();
 
             var rows = ProcessCSV(file);
 
             foreach (var row in rows)
             {
-                this.date.Add(row.date);
-                this.open.Add(row.open);
-                this.high.Add(row.high);
-                this.low.Add(row.low);
-                this.close.Add(row.close);
+                this.Date.Add(row.date);
+                this.Open.Add(row.open);
+                this.High.Add(row.high);
+                this.Low.Add(row.low);
+                this.Close.Add(row.close);
             }
             
-            this.symbol = symbol;
-            this.category = category;
-            this.sector = sector;
-            this.bigpointvalue = bigpointvalue;
-            this.ticksize = ticksize;
+            this.Symbol = symbol;
+            this.Category = category;
+            this.Sector = sector;
+            this.BigPointValue = bigpointvalue;
+            this.TickSize = ticksize;
         }
 
 
         public Quote(Quote in_quote, List<DateTime> D, List<double> O, List<double> H, List<double> L, List<double> C)
         {
-            this.date = D;
-            this.open = O;
-            this.high = H;
-            this.low = L;
-            this.close = C;
-            this.symbol = in_quote.Symbol;
-            this.category = in_quote.Category;
-            this.sector = in_quote.Sector;
-            this.bigpointvalue = in_quote.BigPointValue;
-            this.ticksize = in_quote.TickSize;
+            this.Date = D;
+            this.Open = O;
+            this.High = H;
+            this.Low = L;
+            this.Close = C;
+            this.Symbol = in_quote.Symbol;
+            this.Category = in_quote.Category;
+            this.Sector = in_quote.Sector;
+            this.BigPointValue = in_quote.BigPointValue;
+            this.TickSize = in_quote.TickSize;
         }
 
         public void print_bar(int i)
@@ -92,11 +73,11 @@ namespace ProBT
         public void PrintInfo()
         {
             Console.WriteLine("*  QUOTE INFO  *");
-            Console.WriteLine("Symbol         : {0}", symbol);
-            Console.WriteLine("Sector         : {0}", sector);
-            Console.WriteLine("Category       : {0}", category);
-            Console.WriteLine("BigPointValue  : {0:0.00}", BPV);
-            Console.WriteLine("TickSize       : {0:0.00}", TS);
+            Console.WriteLine("Symbol         : {0}", Symbol);
+            Console.WriteLine("Sector         : {0}", Sector);
+            Console.WriteLine("Category       : {0}", Category);
+            Console.WriteLine("BigPointValue  : {0:0.00}", BigPointValue);
+            Console.WriteLine("TickSize       : {0:0.00}", TickSize);
             Console.WriteLine("TotalBars      : {0:0.00}", Date.Count);
             Console.WriteLine("DateFrom       : {0}", Stat["DateFrom"]);
             Console.WriteLine("DateTo         : {0}", Stat["DateTo"]);
@@ -111,7 +92,7 @@ namespace ProBT
             Console.WriteLine("*--  samples  -------------*\n");
             Console.WriteLine("               date   open   high    low  close");
             for (int i = 0; i < 5; i++)
-                Console.WriteLine("{0}   {1}   {2}   {3}   {4}",date[i], open[i], high[i], low[i], close[i]);
+                Console.WriteLine("{0}   {1}   {2}   {3}   {4}",Date[i], Open[i], High[i], Low[i], Close[i]);
             Console.WriteLine("*--------------------------*");
         }
 

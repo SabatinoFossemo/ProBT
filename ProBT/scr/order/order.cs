@@ -1,74 +1,50 @@
 namespace ProBT
 {
-    public class Order
+    public class Order: IOrder
     {
-        ORDER_TYPE type;
-        ORDER_PRICE price_s = ORDER_PRICE.NULL;
-        double price_d = 0;
-        double sl = 0;
-        double tp = 0;
-        string name;
+
+        public ORDER_TYPE Type { get; }
+        public ORDER_PRICE PriceS { get; }
+        public double PriceD { get; }
+        public double StopLoss { get; }
+        public double TakeProfit { get; }
+        public string Name { get; }
+        public double SL { get; set; }
+        public double TP { get; set; }
+        public bool PriceIsString { get => this.PriceS ==  ORDER_PRICE.OPEN || this.PriceS ==  ORDER_PRICE.CLOSE;}
 
 
-        public Order(ORDER_TYPE order_type, ORDER_PRICE order_price, string name)
-        {
-
-            this.type = order_type;
-            this.price_s = order_price;
-            this.name = name;
-
+        public Order(ORDER_TYPE order_type, ORDER_PRICE order_price, string name) {
+            this.Type = order_type;
+            this.PriceS = order_price;
+            this.Name = name;
         }
 
-        public Order(ORDER_TYPE order_type, double order_price, string name)
-        {
-            this.type = order_type;
-            this.price_d = order_price;
-            this.name = name;
+        public Order(ORDER_TYPE order_type, double order_price, string name) {
+            this.Type = order_type;
+            this.PriceD = order_price;
+            this.Name = name;
         }
 
-        internal ORDER_TYPE Type {get => this.type;}
-        internal ORDER_PRICE PriceS {get => this.price_s;}
-        internal double PriceD {get => this.price_d;}
-        internal double StopLoss {get => this.sl;}
-        internal double TakeProfit {get => this.tp;}
-        internal string Name {get => this.name;}
-        
-        internal void SetStopLoss(double point)
-        {
-            this.sl = point;
+        public void SetStopLoss(double point) {
+            this.SL = point;
         }
-        internal void SetTakeProfit(double point)
-        {
-            this.tp = point;
-        }
-        
 
-        public override string ToString()
-        {
+        public void SetTakeProfit(double point) {
+            this.TP = point;
+        }
+
+
+        public override string ToString() {
+            string price = this.PriceD.ToString();
             if(PriceIsString)
-                return $"ORD: {type.ToString()} - {name} - {price_s} - {sl} - {tp}";
-            else
-                return $"ORD: {type.ToString()} - {name} - {price_d} - {sl} - {tp}";
+                price = this.PriceS.ToString();
+            
+            string output = $"ORD: {this.Type.ToString()} - {this.Name} - {price} - {this.SL} - {this.TP}";
+
+            return output;
         }
 
-        internal bool PriceIsString
-        {
-            get
-            {
-            if (price_s ==  ORDER_PRICE.OPEN || price_s ==  ORDER_PRICE.CLOSE)
-                return true;
-            else
-                return false;
-            }
-        } 
 
-        private bool TypeIsCorrect(ORDER_TYPE order_type)
-        {
-            if (order_type == ORDER_TYPE.BUY || order_type == ORDER_TYPE.SELL || order_type == ORDER_TYPE.SELLSHORT || order_type == ORDER_TYPE.BUYTOCOVER)
-                return true;
-            else
-                return false;
-        }
     }
-
 }

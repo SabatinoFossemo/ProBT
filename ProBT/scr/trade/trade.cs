@@ -2,22 +2,21 @@ namespace ProBT
 {
     public class Trade : Position
     {
-        DateTime exit_date;
-        double exit_price;
-        string exit_reason;
+        // PROPERTIES ................................................................................................
 
-        public Trade(Position pos, DateTime exit_date, double exit_price, string exit_reason) : 
-        base(pos)
+        public DateTime ExitDate { get; }
+        public double ExitPrice { get; }
+        public string ExitReason { get; }
+
+        // CONSTRUCTORS ................................................................................................
+        public Trade(Position pos, DateTime exit_date, double exit_price, string exit_reason) : base(pos)
         {
-            this.exit_date = exit_date;
-            this.exit_price = exit_price;
-            this.exit_reason = exit_reason;
+            this.ExitDate = exit_date;
+            this.ExitPrice = exit_price;
+            this.ExitReason = exit_reason;
         }
 
-        internal DateTime ExitDate {get => this.exit_date;}
-        internal double ExitPrice {get => this.exit_price;}
-        internal string ExitReason {get => this.exit_reason;}
-
+        // OVERRIDE METHODS ................................................................................................
         public override string ToString()
         {
             int cw = 10;
@@ -40,7 +39,5 @@ namespace ProBT
 
             return result;
         }
-
     }
-
 }
